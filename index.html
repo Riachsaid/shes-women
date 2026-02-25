@@ -1,57 +1,273 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حذاء نسائي رياضي - L STORE</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Product Page - Premium Shoes</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
-        body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; }
-        .btn-grad { background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); transition: 0.3s; }
-        .product-card { background: white; border-radius: 2rem; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+        /* --- CSS الأساسي للصفحة --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            text-align: center;
+        }
+
+        .product-card {
+            padding: 20px;
+            max-width: 400px;
+            margin: auto;
+        }
+
+        .product-img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .price-tag {
+            background: #fff;
+            color: #d61f47;
+            padding: 5px 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: -40px;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h2 { margin-top: 20px; color: #0b1c3f; }
+        p { color: #777; font-size: 0.9rem; line-height: 1.6; }
+
+        /* زر اطلب الآن */
+        .buy-now-btn {
+            background-color: #d61f47;
+            color: white;
+            width: 90%;
+            padding: 15px;
+            border-radius: 15px;
+            border: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        /* --- CSS تاع الـ AI Chat Overlay (Full Screen) --- */
+        #ai-chat-overlay {
+            display: none; /* مخفي */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 10000;
+            flex-direction: column;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .chat-header {
+            background: #d61f47;
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .chat-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f4f7f6;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .msg {
+            max-width: 80%;
+            padding: 12px 15px;
+            border-radius: 15px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .ai-msg {
+            background: #fff;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .user-msg {
+            background: #d61f47;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .chat-footer {
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #eee;
+        }
+
+        .options-container {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .option-btn {
+            background: #fff;
+            border: 1px solid #d61f47;
+            color: #d61f47;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .option-btn:hover { background: #d61f47; color: white; }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-group input {
+            flex: 1;
+            border: 1px solid #ddd;
+            padding: 12px;
+            border-radius: 25px;
+            outline: none;
+        }
+
+        .send-btn {
+            background: #d61f47;
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
     </style>
 </head>
-<body class="text-slate-800 flex items-center justify-center min-h-screen">
+<body>
 
-    <div class="product-card max-w-md w-full p-4 m-4">
-        <div class="relative">
-            <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=500&q=80" 
-                 class="w-full h-80 object-cover rounded-[1.5rem]" alt="حذاء نسائي">
-            <div class="absolute top-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-xl font-black text-rose-600 shadow-md">
-                5,800 DA
-            </div>
-        </div>
+    <div class="product-card">
+        <img src="https://riachsaid.github.io/shoes-image.jpg" alt="Premium Shoe" class="product-img"> 
+        <div class="price-tag">DA 5,800</div>
         
-        <div class="p-6 text-center">
-            <h1 class="text-2xl font-black text-slate-900 mb-2">حذاء نسائي رياضي Premium</h1>
-            <p class="text-slate-500 text-sm mb-6">أناقة وراحة لا مثيل لها، متوفر بمقاسات مختلفة وألوان جذابة تناسب ذوقك.</p>
-            
-            <button onclick="buyNow()" class="w-full btn-grad text-white py-4 rounded-2xl font-black flex items-center justify-center gap-2 shadow-lg shadow-rose-200">
-                <i class="fas fa-shopping-cart"></i> اطلب الآن (شراء)
-            </button>
+        <h2>حذاء نسائي رياضي <br> Premium</h2>
+        <p>أناقة وراحة لا مثيل لها، متوفر بمقاسات مختلفة وألوان جذابة تناسب ذوقك.</p>
+
+        <button class="buy-now-btn" onclick="openChat()">
+            اطلب الآن (شراء) <i class="fas fa-shopping-cart" style="margin-right: 8px;"></i>
+        </button>
+    </div>
+
+    <div id="ai-chat-overlay">
+        <div class="chat-header">
+            <button class="back-btn" onclick="closeChat()"><i class="fas fa-arrow-right"></i> رجوع</button>
+            <span>مساعد الطلبات الذكي</span>
+            <div style="width: 40px;"></div> </div>
+
+        <div class="chat-content" id="chat-box">
+            <div class="msg ai-msg">أهلاً بك! راني هنا باش نسهلك الطلبية. واش هو اللون لي عجبك بزاف؟</div>
+        </div>
+
+        <div class="chat-footer">
+            <div class="options-container" id="options">
+                <button class="option-btn" onclick="selectOption('أزرق وردي')">أزرق وردي</button>
+                <button class="option-btn" onclick="selectOption('أحمر ملكي')">أحمر ملكي</button>
+                <button class="option-btn" onclick="selectOption('أسود كلاسيك')">أسود كلاسيك</button>
+            </div>
+            <div class="input-group">
+                <input type="text" id="user-input" placeholder="اكتب رسالتك هنا...">
+                <button class="send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+            </div>
         </div>
     </div>
 
-    <script type="module">
-        import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
-        
-        const chat = createChat({
-            webhookUrl: 'https://uncorrectable-jeane-ungrudged.ngrok-free.dev/webhook/chat', 
-            title: 'L STORE Support 🤖',
-            welcomeMessage: 'مرحباً بك! راني هنا باش نسجلك الطلبية تاعك.',
-            showWelcomeScreen: false,
-        });
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const optionsDiv = document.getElementById('options');
 
-        // الوظيفة اللي تبعت الميساج للـ AI
-        window.buyNow = () => {
-            chat.toggle(); // يفتح الشات
+        function openChat() {
+            document.getElementById('ai-chat-overlay').style.display = 'flex';
+        }
+
+        function closeChat() {
+            document.getElementById('ai-chat-overlay').style.display = 'none';
+        }
+
+        function selectOption(val) {
+            addMessage(val, 'user');
+            
+            // رد الـ AI على حسب المرحلة
             setTimeout(() => {
-                chat.sendMessage("ORDER_START: حذاء نسائي رياضي");
-            }, 500);
-        };
+                if(val.includes('أزرق') || val.includes('أحمر') || val.includes('أسود')) {
+                    addMessage(`اختيار رائع! اللون ${val} متوفر. واش هو المقاس (Size) تاعك؟`, 'ai');
+                    // تبديل الخيارات للمقاسات
+                    optionsDiv.innerHTML = `
+                        <button class="option-btn" onclick="selectOption('37')">37</button>
+                        <button class="option-btn" onclick="selectOption('38')">38</button>
+                        <button class="option-btn" onclick="selectOption('39')">39</button>
+                        <button class="option-btn" onclick="selectOption('40')">40</button>
+                    `;
+                } else {
+                    addMessage("يعطيك الصحة! قولي برك وين نسكن (الولاية) باش نحسبولك التوصيل؟", 'ai');
+                    optionsDiv.innerHTML = ""; // نخلوه يكتب الولاية بيده
+                }
+            }, 800);
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('user-input');
+            if(input.value.trim() !== "") {
+                addMessage(input.value, 'user');
+                input.value = "";
+                // رد تلقائي بسيط
+                setTimeout(() => {
+                    addMessage("راني استلمت المعلومة، كملي برك المعلومات الباقية...", 'ai');
+                }, 1000);
+            }
+        }
+
+        function addMessage(text, sender) {
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('msg');
+            msgDiv.classList.add(sender === 'user' ? 'user-msg' : 'ai-msg');
+            msgDiv.innerText = text;
+            chatBox.appendChild(msgDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
     </script>
+
 </body>
 </html>
