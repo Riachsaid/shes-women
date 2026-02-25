@@ -3,104 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Shopping Assistant</title>
+    <title>L STORE - AI Assistant</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f7f6; }
-        .product-card { background: white; padding: 20px; max-width: 400px; margin: 20px auto; border-radius: 20px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .product-img { width: 100%; border-radius: 15px; }
-        .buy-now-btn { background-color: #d61f47; color: white; width: 100%; padding: 15px; border-radius: 12px; border: none; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        /* CSS - تنسيق الصفحة والشات */
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background-color: #f4f7f6; }
+        
+        /* كارت المنتج */
+        .product-card { background: white; padding: 20px; max-width: 400px; margin: 20px auto; border-radius: 25px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .product-img { width: 100%; border-radius: 20px; }
+        .price-tag { background: white; color: #d61f47; padding: 8px 18px; border-radius: 12px; font-weight: bold; display: inline-block; margin-top: -30px; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid #eee; }
+        
+        .buy-now-btn { background-color: #d61f47; color: white; width: 100%; padding: 18px; border-radius: 18px; border: none; font-size: 1.3rem; font-weight: bold; cursor: pointer; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
 
-        /* Full Screen Chat */
-        #chat-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 10000; flex-direction: column; }
+        /* الشات Full Screen */
+        #chat-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 10000; flex-direction: column; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        
         .chat-header { background: #d61f47; color: white; padding: 15px; display: flex; align-items: center; justify-content: space-between; font-weight: bold; }
-        .chat-content { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #f9f9f9; }
-        .msg { max-width: 80%; padding: 12px; border-radius: 15px; font-size: 1rem; line-height: 1.4; }
-        .ai-msg { background: #eee; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .back-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+
+        .chat-content { flex: 1; padding: 20px; overflow-y: auto; background: #f0f2f5; display: flex; flex-direction: column; gap: 12px; }
+        .msg { max-width: 85%; padding: 12px 15px; border-radius: 18px; font-size: 1rem; line-height: 1.4; }
+        .ai-msg { background: white; align-self: flex-start; border-bottom-left-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .user-msg { background: #d61f47; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .chat-footer { padding: 15px; border-top: 1px solid #ddd; display: flex; flex-direction: column; gap: 10px; }
-        .options { display: flex; gap: 8px; flex-wrap: wrap; }
-        .opt-btn { background: white; border: 1px solid #d61f47; color: #d61f47; padding: 5px 12px; border-radius: 20px; cursor: pointer; font-size: 0.9rem; }
-        .input-area { display: flex; gap: 8px; }
-        .input-area input { flex: 1; padding: 12px; border-radius: 25px; border: 1px solid #ddd; outline: none; }
+
+        .chat-footer { padding: 15px; background: white; border-top: 1px solid #eee; }
+        .typing { font-size: 0.8rem; color: #888; margin-bottom: 5px; display: none; }
+        
+        .input-group { display: flex; gap: 10px; }
+        .input-group input { flex: 1; border: 1px solid #ddd; padding: 12px; border-radius: 25px; outline: none; }
         .send-btn { background: #d61f47; color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; }
-        .typing { font-size: 0.8rem; color: #888; display: none; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
     <div class="product-card">
-        <img src="https://riachsaid.github.io/shoes-image.jpg" onerror="this.src='https://via.placeholder.com/300'" class="product-img">
-        <h2>حذاء نسائي Premium</h2>
-        <button class="buy-now-btn" onclick="openChat()">اطلب الآن (شراء)</button>
+        <img src="https://riachsaid.github.io/shoes-image.jpg" onerror="this.src='https://via.placeholder.com/400x400?text=Premium+Shoes'" class="product-img">
+        <div class="price-tag">DA 5,800</div>
+        <h2>حذاء نسائي رياضي Premium</h2>
+        <button class="buy-now-btn" onclick="openChat()">اطلب الآن (شراء) <i class="fas fa-shopping-cart"></i></button>
     </div>
 
     <div id="chat-overlay">
         <div class="chat-header">
-            <button style="background:none; border:none; color:white; font-size:1.5rem;" onclick="closeChat()">×</button>
-            <span>AI Assistant (n8n Powered)</span>
-            <div style="width:20px;"></div>
+            <button class="back-btn" onclick="closeChat()"><i class="fas fa-arrow-right"></i></button>
+            <span>مساعد L STORE الذكي</span>
+            <div style="width: 30px;"></div>
         </div>
         
         <div class="chat-content" id="chat-box">
-            <div class="msg ai-msg">مرحباً! راني هنا باش نعاونك في الطلبية تاعك. واش هو اللون لي عجبك؟</div>
-        </div>
+            </div>
 
         <div class="chat-footer">
-            <div class="typing" id="typing-indicator">الـ AI راه يكتب...</div>
-            <div class="options">
-                <button class="opt-btn" onclick="quickSend('أزرق وردي')">أزرق وردي</button>
-                <button class="opt-btn" onclick="quickSend('أحمر')">أحمر</button>
-                <button class="opt-btn" onclick="quickSend('أسود')">أسود</button>
-            </div>
-            <div class="input-area">
-                <input type="text" id="user-input" placeholder="اكتب هنا...">
+            <div id="typing-indicator" class="typing">الـ AI راه يكتب...</div>
+            <div class="input-group">
+                <input type="text" id="user-input" placeholder="اكتب رسالتك هنا...">
                 <button class="send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
 
     <script>
-        const N8N_WEBHOOK_URL = 'https://uncorrectable-jeane-ungrudged.ngrok-free.dev/webhook/chat'; // حط رابط n8n هنا
-        let sessionId = "user_" + Math.random().toString(36).substring(7); // باش تعقل الميموري على هاد الكليون
+        // --- إعدادات n8n ---
+        const N8N_URL = 'https://YOUR_WEBHOOK_URL_HERE'; // <--- حط رابط الـ Webhook تاعك هنا
+        let sessionId = "user_" + Math.random().toString(36).substring(7);
 
-        function openChat() { document.getElementById('chat-overlay').style.display = 'flex'; }
-        function closeChat() { document.getElementById('chat-overlay').style.display = 'none'; }
+        const chatBox = document.getElementById('chat-box');
+        const typingIndicator = document.getElementById('typing-indicator');
 
-        async function sendMessage(text) {
+        // فتح الشات وإرسال ميساج البداية أوتوماتيكياً
+        async function openChat() {
+            document.getElementById('chat-overlay').style.display = 'flex';
+            
+            // إذا كان الشات فارغ، نرسل إشارة البداية لـ n8n
+            if (chatBox.innerHTML.trim() === "") {
+                const hiddenTrigger = "ORDER_START: حذاء نسائي رياضي Premium";
+                callN8n(hiddenTrigger);
+            }
+        }
+
+        function closeChat() {
+            document.getElementById('chat-overlay').style.display = 'none';
+        }
+
+        async function sendMessage() {
             const input = document.getElementById('user-input');
-            const message = text || input.value;
+            const message = input.value.trim();
             if (!message) return;
 
             addMessage(message, 'user');
             input.value = "";
-            document.getElementById('typing-indicator').style.display = 'block';
+            callN8n(message);
+        }
 
+        async function callN8n(msg) {
+            typingIndicator.style.display = 'block';
             try {
-                const response = await fetch(N8N_WEBHOOK_URL, {
+                const response = await fetch(N8N_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        chatInput: message, 
-                        sessionId: sessionId 
-                    })
+                    body: JSON.stringify({ chatInput: msg, sessionId: sessionId })
                 });
-                
                 const data = await response.json();
-                // n8n يرجع الرد عادة في حقل اسمه output أو text
-                const aiResponse = data.output || data.text || "راني سجلت طلبك!";
-                addMessage(aiResponse, 'ai');
-            } catch (error) {
-                addMessage("سمحيلي، كاين مشكل في الاتصال. جربي مرة أخرى.", 'ai');
+                const aiText = data.output || data.text || "راني هنا، واش هي الولاية تاعك؟";
+                addMessage(aiText, 'ai');
+            } catch (e) {
+                addMessage("كاين مشكل في الاتصال، عاود جرب.", "ai");
             } finally {
-                document.getElementById('typing-indicator').style.display = 'none';
+                typingIndicator.style.display = 'none';
             }
         }
 
-        function quickSend(val) { sendMessage(val); }
-
         function addMessage(text, sender) {
-            const chatBox = document.getElementById('chat-box');
             const div = document.createElement('div');
             div.className = `msg ${sender}-msg`;
             div.innerText = text;
